@@ -688,28 +688,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     </div>
                     
                     <div className="flex-1 overflow-y-auto px-6 py-4 space-y-1.5 custom-scrollbar">
-                      {MENU_ITEMS.map((item, i) => item.type === 'divider' ? (
-                        <div key={i} className="px-5 pt-10 pb-3 text-[9px] text-white/20 uppercase font-black tracking-[0.3em]">{item.label}</div>
-                      ) : (
-                        <button 
-                          key={item.id} 
-                          onClick={() => {
-                            setActiveTab(item.id!);
-                            if (window.innerWidth < 1024) setIsSidebarOpen(false);
-                          }} 
-                          className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all relative group overflow-hidden ${
-                            activeTab === item.id 
-                              ? 'bg-purple-600 text-white shadow-[0_10px_30px_rgba(168,85,247,0.3)]' 
-                              : 'text-white/30 hover:bg-white/[0.04] hover:text-white'
-                          }`}
-                        >
-                          <item.icon size={18} className={activeTab === item.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100 transition-opacity'} />
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{item.label}</span>
-                          {activeTab === item.id && (
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-white rounded-full" />
-                          )}
-                        </button>
-                      ))}
+                      {MENU_ITEMS.map((item, i) => {
+                        if (item.type === 'divider') {
+                          return (
+                            <div key={i} className="px-5 pt-10 pb-3 text-[9px] text-white/20 uppercase font-black tracking-[0.3em]">{item.label}</div>
+                          );
+                        }
+                        const Icon = item.icon;
+                        return (
+                          <button 
+                            key={item.id} 
+                            onClick={() => {
+                              setActiveTab(item.id!);
+                              if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                            }} 
+                            className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all relative group overflow-hidden ${
+                              activeTab === item.id 
+                                ? 'bg-purple-600 text-white shadow-[0_10px_30px_rgba(168,85,247,0.3)]' 
+                                : 'text-white/30 hover:bg-white/[0.04] hover:text-white'
+                            }`}
+                          >
+                            {Icon && <Icon size={18} className={activeTab === item.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100 transition-opacity'} />}
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">{item.label}</span>
+                            {activeTab === item.id && (
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-white rounded-full" />
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
 
                     <div className="p-8 border-t border-white/5">
