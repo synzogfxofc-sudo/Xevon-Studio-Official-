@@ -119,6 +119,10 @@ function App() {
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
+    // Hidden Backdoor: If the name is exactly "xevon-root", open Admin Panel
+    if (name === 'xevon-root') {
+      setIsAdminOpen(true);
+    }
   };
 
   return (
@@ -164,7 +168,7 @@ function App() {
                 <Rating userName={userName} />
                 <Contact />
               </main>
-              <Footer onAdminClick={() => setIsAdminOpen(true)} />
+              <Footer />
               <LiveChat />
             </div>
           </div>

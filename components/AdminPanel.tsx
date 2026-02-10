@@ -602,7 +602,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin') setIsAuthenticated(true);
+    if (password === '@xevon.ad2026') setIsAuthenticated(true);
     else alert('Invalid security key');
   };
 
@@ -922,48 +922,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                             <div className="grid grid-cols-1 gap-6 mt-6">
                               <InputField label="Asset Identifier" value={p.title} onChange={v => updateItemInArray('portfolio', 'items', i, 'title', v)} />
                               <InputField label="Classification" value={p.category} onChange={v => updateItemInArray('portfolio', 'items', i, 'category', v)} />
-                            </div>
-                          </SectionBlock>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === 'pricing' && (
-                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
-                      <div className="flex justify-between items-center bg-white/[0.03] p-6 rounded-[28px] border border-white/10 backdrop-blur-md shadow-lg">
-                        <div>
-                           <h3 className="text-lg font-display font-bold text-white">Package Matrix</h3>
-                           <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mt-1">Value Propositions</p>
-                        </div>
-                        <button onClick={() => addItemToArray('pricing', 'packages', { name: 'NEW TIER', price: '৳0', description: 'Enter plan description...', features: [] })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-xl shadow-purple-600/20 active:scale-95 transition-all"><Plus size={16} /> Add Tier</button>
-                      </div>
-                      <div className="grid grid-cols-1 gap-8">
-                        {(tempContent.pricing.packages || []).map((pkg, pIdx) => (
-                          <SectionBlock key={pIdx} title={pkg.name}>
-                            <div className="flex justify-end mb-4"><button onClick={() => removeItemFromArray('pricing', 'packages', pIdx)} className="p-2 text-white/10 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                              <InputField label="Tier Identifier" value={pkg.name} onChange={v => updateItemInArray('pricing', 'packages', pIdx, 'name', v)} />
-                              <InputField label="Value Label" value={pkg.price} onChange={v => updateItemInArray('pricing', 'packages', pIdx, 'price', v)} />
-                            </div>
-                            <div className="mt-8 border-t border-white/5 pt-8">
-                              <div className="flex justify-between items-center mb-6">
-                                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Feature Inclusions</label>
-                                <button onClick={() => addPricingFeature(pIdx)} className="text-[10px] text-purple-400 font-black uppercase tracking-[0.2em] hover:text-white transition-colors">+ New Inclusion</button>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {(pkg.features || []).map((f, fIdx) => (
-                                  <div key={fIdx} className="flex gap-3 group">
-                                    <input 
-                                      value={f.name} 
-                                      onChange={e => updatePricingFeature(pIdx, fIdx, 'name', e.target.value)} 
-                                      className="flex-1 bg-black/40 border border-white/10 rounded-xl px-5 py-3 text-xs text-white focus:border-purple-500/50 transition-all shadow-inner" 
-                                      placeholder="Feature"
-                                    />
-                                    <button onClick={() => removePricingFeature(pIdx, fIdx)} className="px-3 text-white/10 hover:text-red-400 transition-colors"><X size={16}/></button>
-                                  </div>
-                                ))}
-                              </div>
                             </div>
                           </SectionBlock>
                         ))}

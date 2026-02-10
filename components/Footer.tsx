@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Twitter, Instagram, Linkedin, Github, Lock, Facebook } from 'lucide-react';
+import { Twitter, Instagram, Linkedin, Github, Facebook } from 'lucide-react';
 import { useContent } from '../contexts/ContentContext';
 
 interface FooterProps {
@@ -15,7 +15,7 @@ const iconMap = {
   facebook: Facebook
 };
 
-export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
+export const Footer: React.FC<FooterProps> = () => {
   const { content } = useContent();
   const { company } = content;
 
@@ -85,15 +85,6 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
             <p className="text-white/40 text-sm">© {new Date().getFullYear()} {company.name}. All rights reserved.</p>
-            {onAdminClick && (
-              <button 
-                onClick={onAdminClick}
-                className="text-white/10 hover:text-purple-500 transition-colors p-1"
-                title="Admin Access"
-              >
-                <Lock size={10} />
-              </button>
-            )}
           </div>
           <div className="flex items-center gap-2 text-white/40 text-sm">
             <span>Made by</span>
