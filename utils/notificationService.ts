@@ -1,4 +1,5 @@
-import { getToken } from "firebase/messaging";
+
+import { getToken, Messaging } from "firebase/messaging";
 import { getMessagingInstance } from "../firebase";
 import { supabase } from "../supabase";
 
@@ -37,7 +38,8 @@ export const subscribeAdminDevice = async (): Promise<string | null> => {
     }
 
     // 3. Get FCM Token
-    const token = await getToken(messaging, {
+    // We cast messaging as Messaging because we checked !messaging above, but TS needs reassurance in async flow
+    const token = await getToken(messaging as Messaging, {
         serviceWorkerRegistration: registration
     });
 
@@ -87,7 +89,7 @@ export const sendAdminNotification = async (title: string, body: string) => {
 
     if (error || !data?.data?.fcm_token) {
       console.warn("No Admin FCM token found.");
-      alert("No connected device found. Please connect a device first.");
+      // alert("No connected device found. Please connect a device first.");
       return;
     }
 
@@ -116,19 +118,15 @@ export const sendAdminNotification = async (title: string, body: string) => {
     console.log("FCM Send Result:", result);
 
     if (response.status === 401) {
-       alert("Error 401: Unauthorized. The provided Server Key might be an API Key instead of a Cloud Messaging Server Key.");
+       console.error("Error 401: Unauthorized FCM Key");
     } else if (result.failure > 0) {
        const errorMsg = result.results?.[0]?.error || "Unknown error";
        console.error("FCM Failure:", errorMsg);
-       alert(`Notification failed to deliver: ${errorMsg}`);
     } else {
        console.log("Notification sent successfully.");
-       // Optional success alert, commented out to avoid spamming on auto-triggers
-       // alert("Notification sent!"); 
     }
 
   } catch (err) {
     console.error("Failed to send notification:", err);
-    alert("Network error occurred while sending notification.");
   }
 };

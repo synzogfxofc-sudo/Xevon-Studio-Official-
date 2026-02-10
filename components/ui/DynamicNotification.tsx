@@ -12,7 +12,8 @@ export const DynamicNotification: React.FC = () => {
     if (activeNotification) {
       if (audioRef.current) {
         audioRef.current.volume = 0.3;
-        audioRef.current.play().catch(e => console.log("Audio play blocked"));
+        // Typed error handling to prevent build failure
+        audioRef.current.play().catch((e: any) => console.log("Audio play blocked", e));
       }
     }
   }, [activeNotification]);
