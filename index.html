@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Xevon Studio is an ultra-premium, futuristic marketing agency featuring glassmorphism design, real-time analytics, and luxury digital experiences." />
+    <meta name="keywords" content="Digital Agency, Marketing, Glassmorphism, UI/UX, Web Design, Futurism, React Website" />
+    <meta name="author" content="Xevon Studio" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://xevonstudio.com/" />
+    <meta property="og:title" content="Xevon Studio | Futuristic Digital Agency" />
+    <meta property="og:description" content="Experience the future of digital marketing with Xevon Studio." />
+    <meta property="og:image" content="https://image2url.com/r2/default/images/1770543518698-44cdd9b3-f860-41c0-98cc-36ec0e607a27.jpeg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://xevonstudio.com/" />
+    <meta property="twitter:title" content="Xevon Studio | Futuristic Digital Agency" />
+    <meta property="twitter:description" content="Experience the future of digital marketing with Xevon Studio." />
+    <meta property="twitter:image" content="https://image2url.com/r2/default/images/1770543518698-44cdd9b3-f860-41c0-98cc-36ec0e607a27.jpeg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="https://image2url.com/r2/default/images/1770543518698-44cdd9b3-f860-41c0-98cc-36ec0e607a27.jpeg" />
+
+    <title>Xevon Studio | Futuristic Digital Agency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Outfit', 'sans-serif'],
+            },
+            colors: {
+              glass: {
+                100: 'rgba(255, 255, 255, 0.1)',
+                200: 'rgba(255, 255, 255, 0.2)',
+                300: 'rgba(255, 255, 255, 0.3)',
+                dark: 'rgba(0, 0, 0, 0.3)',
+              },
+              brand: {
+                purple: '#A855F7',
+                light: '#E9D5FF',
+                dark: '#581C87',
+              }
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'glow': 'glow 2s ease-in-out infinite alternate',
+              'shine': 'shine 3s linear infinite',
+              'shimmer': 'shimmer 2s linear infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              glow: {
+                '0%': { boxShadow: '0 0 5px #A855F7' },
+                '100%': { boxShadow: '0 0 20px #A855F7, 0 0 10px #E9D5FF' },
+              },
+              shine: {
+                '0%': { backgroundPosition: '200% center' },
+                '100%': { backgroundPosition: '-200% center' },
+              },
+              shimmer: {
+                'from': { transform: 'translateX(-100%) skewX(-15deg)' },
+                'to': { transform: 'translateX(200%) skewX(-15deg)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+        /* Prevent font size adjustments after orientation changes in iOS */
+        -webkit-text-size-adjust: 100%;
+      }
+
+      /* Fix to prevent zooming on input focus for mobile devices */
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f0720;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #581C87;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #7E22CE;
+      }
+      
+      /* Utility for masking scrollbar in reviews */
+      .mask-gradient-b {
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react/": "https://esm.sh/react@18.3.1/",
+    "react-dom": "https://esm.sh/react-dom@18.3.1?deps=react@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?deps=react@18.3.1",
+    "recharts": "https://esm.sh/recharts@2.12.3?deps=react@18.3.1,react-dom@18.3.1",
+    "framer-motion": "https://esm.sh/framer-motion@10.16.4?deps=react@18.3.1,react-dom@18.3.1",
+    "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.3.1",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.45.4",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "firebase/": "https://esm.sh/firebase@^12.9.0/"
+  }
+}
+</script>
+</head>
+  <body class="bg-black text-white antialiased selection:bg-purple-500 selection:text-white">
+    <div id="root"></div>
+  </body>
+</html>
