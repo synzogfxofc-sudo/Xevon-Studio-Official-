@@ -391,7 +391,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     if (isOpen) setTempContent(content);
   }, [content, isOpen]);
 
-  // Fetch Chat Users
+  // Fetch Chat Users and Subscribe for Updates (Side List)
   useEffect(() => {
     if (!isAuthenticated) return;
 
@@ -437,9 +437,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
     fetchChatUsers();
     
+    // Subscribe to new messages to update the list preview
     const channel = supabase
       .channel('admin_all_chats')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'xevon_chats' }, () => fetchChatUsers())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'xevon_chats' }, () => {
+        // Debounced fetch or simple refetch
+        fetchChatUsers();
+      })
       .subscribe();
 
     return () => {
@@ -447,7 +451,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     };
   }, [isAuthenticated]);
 
-  // Fetch specific messages
+  // Fetch specific messages & Realtime Subscription for Active Chat
   useEffect(() => {
     if (!selectedVisitorId) {
       setCurrentChatMessages([]);
@@ -461,31 +465,39 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
         .eq('visitor_id', selectedVisitorId)
         .order('created_at', { ascending: true });
       
-      if (data) setCurrentChatMessages(data);
+      if (data) {
+        setCurrentChatMessages(data);
+        setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+      }
     };
 
     fetchMessages();
 
-    const sub = supabase
-      .channel(`chat_${selectedVisitorId}`)
+    // Unique channel per active visitor to avoid conflicts
+    const channel = supabase
+      .channel(`admin_chat_view_${selectedVisitorId}`)
       .on('postgres_changes', 
-          { event: 'INSERT', schema: 'public', table: 'xevon_chats', filter: `visitor_id=eq.${selectedVisitorId}` }, 
+          { 
+            event: 'INSERT', 
+            schema: 'public', 
+            table: 'xevon_chats', 
+            filter: `visitor_id=eq.${selectedVisitorId}` 
+          }, 
           (payload) => {
-            setCurrentChatMessages(prev => [...prev, payload.new as ChatMessage]);
+            const newMessage = payload.new as ChatMessage;
+            setCurrentChatMessages(prev => {
+              // Prevent duplicates
+              if (prev.some(m => m.id === newMessage.id)) return prev;
+              return [...prev, newMessage];
+            });
+            setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
           })
       .subscribe();
 
     return () => {
-      supabase.removeChannel(sub);
+      supabase.removeChannel(channel);
     };
   }, [selectedVisitorId]);
-
-  // Auto scroll chat
-  useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [currentChatMessages]);
 
   // --- State Manipulation Handlers ---
 
@@ -610,8 +622,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (!adminReply.trim() || !selectedVisitorId) return;
     setIsReplying(true);
-    const { error } = await supabase.from('xevon_chats').insert([{ visitor_id: selectedVisitorId, text: adminReply.trim(), is_user: false }]);
-    if (!error) setAdminReply("");
+    
+    const { error } = await supabase
+      .from('xevon_chats')
+      .insert([{ 
+        visitor_id: selectedVisitorId, 
+        text: adminReply.trim(), 
+        is_user: false 
+      }]);
+      
+    if (!error) {
+      setAdminReply("");
+      // No need to manually append to messages list, realtime subscription will handle it
+      setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+    }
     setIsReplying(false);
   };
 
@@ -695,6 +719,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                           );
                         }
                         const Icon = item.icon;
+                        const SafeIcon = Icon ? <Icon size={18} className={activeTab === item.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100 transition-opacity'} /> : null;
+
                         return (
                           <button 
                             key={item.id} 
@@ -708,7 +734,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                                 : 'text-white/30 hover:bg-white/[0.04] hover:text-white'
                             }`}
                           >
-                            {Icon && <Icon size={18} className={activeTab === item.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100 transition-opacity'} />}
+                            {SafeIcon}
                             <span className="text-[10px] font-black uppercase tracking-[0.2em]">{item.label}</span>
                             {activeTab === item.id && (
                               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-white rounded-full" />

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Minimize2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,9 +18,12 @@ export const LiveChat: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
+  // Scroll on new messages or open
   useEffect(() => {
     if (isOpen) {
       scrollToBottom();
@@ -30,6 +34,7 @@ export const LiveChat: React.FC = () => {
   useEffect(() => {
     if (!visitorId) return;
 
+    // 1. Initial Fetch
     const fetchMessages = async () => {
       try {
         const { data, error } = await supabase
@@ -41,6 +46,7 @@ export const LiveChat: React.FC = () => {
         if (error) throw error;
         if (data) {
           setMessages(data);
+          scrollToBottom();
         }
       } catch (err) {
         console.error("Failed to fetch chat history:", err);
@@ -49,9 +55,9 @@ export const LiveChat: React.FC = () => {
 
     fetchMessages();
 
-    // Subscribe to changes for this visitor's chat
+    // 2. Realtime Subscription
     const channel = supabase
-      .channel(`chat_visitor_${visitorId}`)
+      .channel(`live_chat_${visitorId}`)
       .on(
         'postgres_changes',
         { 
@@ -63,7 +69,7 @@ export const LiveChat: React.FC = () => {
         (payload) => {
           const newMessage = payload.new as ChatMessage;
           
-          // Trigger notification if message is from admin
+          // Show notification if it's an Admin reply
           if (!newMessage.is_user) {
             showNotification({
               title: "Xevon Support",
@@ -73,9 +79,12 @@ export const LiveChat: React.FC = () => {
           }
 
           setMessages(prev => {
+            // Prevent duplicates
             if (prev.some(m => m.id === newMessage.id)) return prev;
             return [...prev, newMessage];
           });
+          
+          scrollToBottom();
         }
       )
       .subscribe();
@@ -94,6 +103,10 @@ export const LiveChat: React.FC = () => {
     setIsSending(true);
 
     try {
+      // Optimistic Update (Show immediately)
+      // Note: We don't add to state manually here because the Realtime subscription
+      // will catch the INSERT event almost instantly. If latency is high, we can enable optimistic updates.
+      
       // 1. Send user message
       const { error: sendError } = await supabase
         .from('xevon_chats')
@@ -113,7 +126,8 @@ export const LiveChat: React.FC = () => {
 
     } catch (err) {
       console.error("Message delivery failed:", err);
-      setInput(userText);
+      // Ideally revert optimistic update here if implemented
+      setInput(userText); // Restore text
     } finally {
       setIsSending(false);
     }
