@@ -160,6 +160,7 @@ const defaultContent: AppContent = {
     subtitle: "The minds behind the magic.",
     members: [
       { 
+        id: 1,
         name: "Alex Xevon", 
         role: "Founder & CEO", 
         image: "https://picsum.photos/400/400?random=10",
@@ -168,6 +169,7 @@ const defaultContent: AppContent = {
         socials: { linkedin: "#", twitter: "#", instagram: "#" }
       },
       { 
+        id: 2,
         name: "Sarah Nova", 
         role: "Creative Director", 
         image: "https://picsum.photos/400/400?random=11",
@@ -176,6 +178,7 @@ const defaultContent: AppContent = {
         socials: { linkedin: "#", instagram: "#" }
       },
       { 
+        id: 3,
         name: "David Tech", 
         role: "Lead Developer", 
         image: "https://picsum.photos/400/400?random=12",
@@ -184,6 +187,7 @@ const defaultContent: AppContent = {
         socials: { github: "#", twitter: "#" }
       },
       { 
+        id: 4,
         name: "Elena Flow", 
         role: "UX Specialist", 
         image: "https://picsum.photos/400/400?random=13",

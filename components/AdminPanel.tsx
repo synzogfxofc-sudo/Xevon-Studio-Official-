@@ -878,7 +878,7 @@ export const AdminPanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {(localContent.portfolio.items || []).map((p, i) => (
-                                <SectionBlock key={i} title={`Project #${i + 1}`}>
+                                <SectionBlock key={p.id || i} title={`Project #${i + 1}`}>
                                     <div className="flex justify-end mb-4"><button onClick={() => removeArrayItem('portfolio', 'items', i)} className="p-2.5 text-white/20 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
                                     <ImageUploadField label="Project Image" value={p.image} onChange={v => updateArrayItem('portfolio', 'items', i, 'image', v)} />
                                     <div className="grid grid-cols-1 gap-6 mt-6">
@@ -923,11 +923,11 @@ export const AdminPanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                                <h3 className="text-xl font-display font-bold text-white">Team Members</h3>
                                <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mt-1">Human Assets</p>
                             </div>
-                            <button onClick={() => addArrayItem('team', 'members', { name: 'New Agent', role: 'Role', image: '', socials: {} })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] transition-all"><Plus size={16} /> Add Member</button>
+                            <button onClick={() => addArrayItem('team', 'members', { id: Date.now(), name: 'New Agent', role: 'Role', image: '', socials: {} })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] transition-all"><Plus size={16} /> Add Member</button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {(localContent.team.members || []).map((m, i) => (
-                                <SectionBlock key={i} title={m.name}>
+                                <SectionBlock key={m.id || i} title={m.name}>
                                     <div className="flex justify-end mb-4"><button onClick={() => removeArrayItem('team', 'members', i)} className="p-2.5 text-white/20 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
                                     <ImageUploadField label="Profile Image" value={m.image} onChange={v => updateArrayItem('team', 'members', i, 'image', v)} />
                                     <div className="grid grid-cols-1 gap-6 mt-8">
