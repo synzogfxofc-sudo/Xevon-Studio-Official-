@@ -10,7 +10,7 @@ import {
   Menu, ArrowLeft, Image as ImageIcon,
   Plus, Trash2, Link as LinkIcon,
   MoreVertical, AlertCircle, Upload,
-  Bell, Clock, Zap
+  Bell, Clock, Zap, Activity
 } from 'lucide-react';
 import { useContent, AppContent } from '../contexts/ContentContext';
 import { useOrder } from '../contexts/OrderContext';
@@ -21,11 +21,13 @@ import { subscribeAdminDevice, sendAdminNotification } from '../utils/notificati
 // --- Shared UI Components ---
 
 const SectionBlock: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="bg-white/[0.03] border border-white/10 rounded-[28px] overflow-hidden mb-6 last:mb-0 backdrop-blur-md shadow-2xl">
-    <div className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
-      <h3 className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">{title}</h3>
+  <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[#0f0720]/60 backdrop-blur-xl shadow-2xl group transition-all duration-300 hover:border-white/20">
+    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none" />
+    <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3 bg-black/20">
+      <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_10px_#a855f7] animate-pulse" />
+      <h3 className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">{title}</h3>
     </div>
-    <div className="p-6">
+    <div className="p-6 relative z-10">
       {children}
     </div>
   </div>
@@ -41,16 +43,16 @@ interface InputFieldProps {
 }
 
 const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, icon: Icon, placeholder, type = "text" }) => (
-  <div className="space-y-2.5">
-    <label className="text-[10px] font-black text-white/30 uppercase tracking-widest block ml-1">{label}</label>
-    <div className="relative group">
-      {Icon && <Icon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-purple-400 transition-colors" />}
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1 transition-colors group-focus-within:text-purple-400">{label}</label>
+    <div className="relative">
+      {Icon && <Icon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-purple-400 transition-colors" />}
       <input 
         type={type}
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder || `Enter ${label}`}
-        className={`w-full bg-black/40 border border-white/10 rounded-2xl ${Icon ? 'pl-11' : 'pl-5'} pr-5 py-3.5 text-sm text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/5 transition-all placeholder-white/10`}
+        className={`w-full bg-[#120b1d]/80 border border-white/10 rounded-xl ${Icon ? 'pl-11' : 'pl-5'} pr-5 py-3.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-purple-500/50 focus:bg-[#1a1025] focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all duration-300`}
       />
     </div>
   </div>
@@ -64,13 +66,13 @@ interface TextAreaProps {
 }
 
 const TextArea: React.FC<TextAreaProps> = ({ label, value, onChange, rows = 4 }) => (
-  <div className="space-y-2.5">
-    <label className="text-[10px] font-black text-white/30 uppercase tracking-widest block ml-1">{label}</label>
+  <div className="space-y-2 group">
+    <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1 transition-colors group-focus-within:text-purple-400">{label}</label>
     <textarea 
       value={value || ''}
       onChange={(e) => onChange(e.target.value)}
       rows={rows}
-      className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/5 transition-all placeholder-white/10 resize-none"
+      className="w-full bg-[#120b1d]/80 border border-white/10 rounded-xl px-5 py-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-purple-500/50 focus:bg-[#1a1025] focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all duration-300 resize-none custom-scrollbar"
     />
   </div>
 );
@@ -94,16 +96,16 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ label, value, onCha
   };
 
   return (
-    <div className="space-y-2.5">
-      <label className="text-[10px] font-black text-white/30 uppercase tracking-widest block ml-1">{label}</label>
+    <div className="space-y-2 group">
+      <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest ml-1 transition-colors group-focus-within:text-purple-400">{label}</label>
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-        <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 group relative cursor-pointer">
+        <div className="w-20 h-20 rounded-xl bg-[#120b1d] border border-white/10 flex items-center justify-center overflow-hidden shrink-0 group/img relative cursor-pointer shadow-inner">
           {value ? (
-            <img src={value} alt="Preview" className="w-full h-full object-cover" />
+            <img src={value} alt="Preview" className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110" />
           ) : (
             <ImageIcon className="text-white/20" size={24} />
           )}
-          <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
+          <label className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 flex items-center justify-center cursor-pointer transition-opacity backdrop-blur-[2px]">
             <Upload size={16} className="text-white" />
             <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
           </label>
@@ -114,7 +116,7 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ label, value, onCha
             value={value || ''} 
             onChange={(e) => onChange(e.target.value)} 
             placeholder="Media URL or upload via icon" 
-            className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/5 transition-all placeholder-white/10"
+            className="w-full bg-[#120b1d]/80 border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-purple-500/50 focus:bg-[#1a1025] focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all duration-300"
           />
         </div>
       </div>
@@ -134,15 +136,15 @@ const SocialsManager: React.FC<SocialsManagerProps> = ({ socials, onChange }) =>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {platforms.map(platform => (
         <div key={platform} className="relative group">
-           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 capitalize text-[10px] font-black tracking-widest w-16 pointer-events-none">
+           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 capitalize text-[10px] font-bold tracking-widest w-16 pointer-events-none group-focus-within:text-purple-400 transition-colors">
              {platform}
            </div>
            <input 
              type="text" 
              value={socials?.[platform] || ''} 
              onChange={(e) => onChange(platform, e.target.value)}
-             className="w-full bg-black/40 border border-white/10 rounded-2xl pl-24 pr-5 py-3 text-xs text-white focus:outline-none focus:border-purple-500/50 transition-all placeholder-white/5"
-             placeholder="Link"
+             className="w-full bg-[#120b1d]/80 border border-white/10 rounded-xl pl-24 pr-5 py-3 text-xs text-white placeholder-white/10 focus:outline-none focus:border-purple-500/50 focus:shadow-[0_0_15px_rgba(168,85,247,0.1)] transition-all"
+             placeholder="https://"
            />
         </div>
       ))}
@@ -163,25 +165,31 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders, team, onAssign }) => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: 'Revenue', value: '৳' + orders.reduce((acc, curr) => acc + parseInt(curr.price?.replace(/[^0-9]/g, '') || '0'), 0).toLocaleString(), icon: CreditCard, color: 'text-emerald-400' },
-            { label: 'Pending', value: orders.filter(o => o.status === 'pending').length, icon: Clock, color: 'text-yellow-400' },
-            { label: 'Completed', value: orders.filter(o => o.status === 'completed').length, icon: Check, color: 'text-blue-400' },
-            { label: 'Active', value: orders.filter(o => o.status === 'assigned').length, icon: Zap, color: 'text-purple-400' },
+            { label: 'Revenue', value: '৳' + orders.reduce((acc, curr) => acc + parseInt(curr.price?.replace(/[^0-9]/g, '') || '0'), 0).toLocaleString(), icon: CreditCard, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+            { label: 'Pending', value: orders.filter(o => o.status === 'pending').length, icon: Clock, color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20' },
+            { label: 'Completed', value: orders.filter(o => o.status === 'completed').length, icon: Check, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
+            { label: 'Active', value: orders.filter(o => o.status === 'assigned').length, icon: Zap, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20' },
           ].map((stat, i) => (
-             <div key={i} className="bg-white/[0.03] border border-white/10 p-5 rounded-[24px] flex flex-col justify-between h-28 relative overflow-hidden group">
-                <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-20 group-hover:scale-110 transition-all">
-                   <stat.icon size={48} />
+             <div key={i} className={`relative overflow-hidden p-5 rounded-[24px] border ${stat.border} bg-[#0f0720]/80 backdrop-blur-md flex flex-col justify-between h-28 group hover:scale-[1.02] transition-transform duration-300 shadow-lg`}>
+                <div className={`absolute -top-4 -right-4 p-6 opacity-10 group-hover:opacity-20 transition-all duration-500`}>
+                   <stat.icon size={56} />
                 </div>
-                <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em]">{stat.label}</span>
-                <span className={`text-2xl font-display font-bold ${stat.color}`}>{stat.value}</span>
+                <div className="flex items-center gap-2 mb-2">
+                   <div className={`w-1.5 h-1.5 rounded-full ${stat.color.replace('text-', 'bg-')} shadow-[0_0_8px_currentColor]`} />
+                   <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.2em]">{stat.label}</span>
+                </div>
+                <span className={`text-2xl font-display font-bold ${stat.color} tracking-tight`}>{stat.value}</span>
              </div>
           ))}
        </div>
 
-       <div className="bg-white/[0.03] border border-white/10 rounded-[28px] overflow-hidden backdrop-blur-md shadow-xl">
+       <div className="bg-[#0f0720]/80 border border-white/10 rounded-[28px] overflow-hidden backdrop-blur-xl shadow-2xl">
           <div className="px-6 py-5 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
-             <h3 className="font-display font-bold text-white text-sm uppercase tracking-widest">Active Pipeline</h3>
-             <button className="text-[10px] text-purple-400 hover:text-white transition-colors uppercase font-black tracking-[0.2em]">Export Matrix</button>
+             <div className="flex items-center gap-3">
+               <Activity size={16} className="text-purple-400" />
+               <h3 className="font-display font-bold text-white text-sm uppercase tracking-widest">Active Pipeline</h3>
+             </div>
+             <button className="text-[10px] text-purple-400 hover:text-white transition-colors uppercase font-black tracking-[0.2em] hover:underline">Export Matrix</button>
           </div>
           <div className="overflow-x-auto">
              <table className="w-full text-left text-sm text-white/70 min-w-[700px]">
@@ -196,38 +204,44 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders, team, onAssign }) => {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                    {orders.map((order) => (
-                      <tr key={order.id} className="hover:bg-white/[0.02] transition-colors">
-                         <td className="px-6 py-5 font-mono text-[10px] opacity-30">#{order.id.slice(-6)}</td>
+                      <tr key={order.id} className="hover:bg-white/[0.04] transition-colors group">
+                         <td className="px-6 py-5 font-mono text-[10px] opacity-30 group-hover:opacity-60 transition-opacity">#{order.id.slice(-6)}</td>
                          <td className="px-6 py-5">
                             <div className="font-bold text-white text-xs">{order.customerName}</div>
-                            <div className="text-[10px] opacity-30 mt-0.5">{order.customerWhatsapp}</div>
+                            <div className="text-[10px] opacity-40 mt-0.5 font-mono">{order.customerWhatsapp}</div>
                          </td>
                          <td className="px-6 py-5">
-                            <div className="text-xs text-white/80">{order.packageName}</div>
-                            <div className="text-[9px] text-purple-400 font-bold mt-0.5">{order.price}</div>
+                            <div className="text-xs text-white/90 font-medium">{order.packageName}</div>
+                            <div className="text-[10px] text-purple-400 font-bold mt-0.5">{order.price}</div>
                          </td>
                          <td className="px-6 py-5">
-                            <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
                                order.status === 'pending' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' :
                                order.status === 'assigned' ? 'bg-purple-500/10 text-purple-500 border-purple-500/20' :
                                'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
                             }`}>
+                               <div className={`w-1 h-1 rounded-full ${
+                                 order.status === 'pending' ? 'bg-yellow-500' :
+                                 order.status === 'assigned' ? 'bg-purple-500' :
+                                 'bg-emerald-500'
+                               }`} />
                                {order.status}
                             </span>
                          </td>
                          <td className="px-6 py-5">
-                            <div className="relative inline-block w-full max-w-[160px]">
+                            <div className="relative inline-block w-full max-w-[160px] group/select">
+                                <div className="absolute inset-0 bg-white/5 rounded-xl opacity-0 group-hover/select:opacity-100 transition-opacity pointer-events-none" />
                                 <select 
                                    onChange={(e) => onAssign(order.id, parseInt(e.target.value))}
-                                   className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-[10px] text-white/70 focus:border-purple-500/50 outline-none appearance-none cursor-pointer hover:bg-white/5 transition-all"
+                                   className="relative z-10 w-full bg-transparent border border-white/10 rounded-xl px-3 py-2 text-[10px] text-white focus:border-purple-500/50 outline-none appearance-none cursor-pointer transition-colors font-bold uppercase tracking-wider"
                                    value={order.assignedRepIndex !== undefined ? order.assignedRepIndex : ""}
                                 >
-                                   <option value="" disabled className="bg-black">Unassigned</option>
+                                   <option value="" disabled className="bg-[#0f0720]">Unassigned</option>
                                    {team.map((member, idx) => (
-                                      <option key={idx} value={idx} className="bg-black">{member.name}</option>
+                                      <option key={idx} value={idx} className="bg-[#0f0720]">{member.name}</option>
                                    ))}
                                 </select>
-                                <ChevronRight size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 rotate-90 pointer-events-none" />
+                                <ChevronRight size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 rotate-90 pointer-events-none" />
                             </div>
                          </td>
                       </tr>
@@ -250,91 +264,167 @@ interface SupportChatProps {
   onSend: (e: React.FormEvent) => void;
   isReplying: boolean;
   chatRef: React.RefObject<HTMLDivElement>;
+  onBack?: () => void;
 }
 
-const SupportChat: React.FC<SupportChatProps> = ({ users, selectedId, onSelect, messages, reply, setReply, onSend, isReplying, chatRef }) => (
-  <div className="flex h-full animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden rounded-[32px] border border-white/10 bg-black/20 shadow-2xl">
-    {!selectedId ? (
-      <div className="flex-1 flex flex-col overflow-hidden bg-white/[0.02]">
-         <div className="p-6 border-b border-white/5">
-            <div className="relative">
-               <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
-               <input type="text" placeholder="Scan identifiers..." className="w-full bg-black/40 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-xs text-white focus:border-purple-500/50 outline-none" />
-            </div>
+const SupportChat: React.FC<SupportChatProps> = ({ users, selectedId, onSelect, messages, reply, setReply, onSend, isReplying, chatRef, onBack }) => (
+  <div className="flex h-full animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden rounded-[24px] sm:rounded-[32px] border border-white/10 bg-[#0f0720]/80 shadow-2xl backdrop-blur-xl relative">
+    {/* Left Side - User List */}
+    <div className={`flex flex-col border-r border-white/5 bg-black/20 ${selectedId ? 'hidden lg:flex w-full lg:w-80 shrink-0' : 'w-full lg:w-96 shrink-0'}`}>
+       {/* Header */}
+       <div className="p-5 border-b border-white/5">
+          <div className="flex items-center gap-3 mb-4">
+             <button 
+                onClick={onBack}
+                className="lg:hidden p-2 -ml-2 rounded-lg text-white/40 hover:text-white hover:bg-white/5 transition-all"
+             >
+                <ArrowLeft size={16} />
+             </button>
+             <h3 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Encrypted Channels</h3>
+          </div>
+          <div className="relative group">
+             <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-purple-400 transition-colors" />
+             <input 
+               type="text" 
+               placeholder="Search frequency..." 
+               className="w-full bg-[#1a1025] border border-white/5 rounded-xl pl-10 pr-4 py-3 text-xs text-white focus:border-purple-500/30 focus:bg-[#1f1230] outline-none transition-all placeholder-white/20" 
+             />
+          </div>
+       </div>
+       
+       {/* List */}
+       <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+          {users.length === 0 ? (
+             <div className="h-full flex flex-col items-center justify-center text-white/20 p-8 text-center">
+                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                    <MessageSquare size={24} className="opacity-50" />
+                </div>
+                <p className="text-[10px] font-bold uppercase tracking-widest">No Signals Detected</p>
+             </div>
+          ) : (
+             users.map((user) => (
+                <button 
+                  key={user.visitor_id}
+                  onClick={() => onSelect(user.visitor_id)}
+                  className={`w-full text-left p-3.5 rounded-xl transition-all border relative group overflow-hidden ${
+                     selectedId === user.visitor_id 
+                     ? 'bg-purple-500/10 border-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.1)]' 
+                     : 'hover:bg-white/[0.03] border-transparent hover:border-white/5'
+                  }`}
+                >
+                   {/* Active Indicator */}
+                   {selectedId === user.visitor_id && <div className="absolute left-0 top-3 bottom-3 w-[3px] bg-purple-500 rounded-r-full shadow-[0_0_10px_#a855f7]"></div>}
+
+                   <div className="flex items-center gap-3 relative z-10 pl-1.5">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold border border-white/10 shrink-0 ${
+                          selectedId === user.visitor_id 
+                            ? 'bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-lg' 
+                            : 'bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white'
+                      }`}>
+                          {user.name.substring(0, 2).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-center mb-0.5">
+                             <span className={`text-xs font-bold truncate ${selectedId === user.visitor_id ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
+                                {user.name}
+                             </span>
+                             <span className="text-[9px] font-mono text-white/20">
+                                {user.lastTime ? new Date(user.lastTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                             </span>
+                          </div>
+                          <p className={`text-[10px] truncate ${selectedId === user.visitor_id ? 'text-purple-200/60' : 'text-white/30 group-hover:text-white/50'}`}>
+                             {user.lastMessage || 'No messages yet'}
+                          </p>
+                      </div>
+                   </div>
+                </button>
+             ))
+          )}
+       </div>
+    </div>
+
+    {/* Right Side - Chat Window */}
+    <div className={`flex-1 flex flex-col overflow-hidden relative bg-[#0A0510]/50 ${!selectedId ? 'hidden lg:flex' : 'flex'}`}>
+         {/* Decorative Background */}
+         <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-900/5 rounded-full blur-[100px]" />
          </div>
-         <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
-            {users.length === 0 ? (
-               <div className="h-full flex flex-col items-center justify-center text-white/10 p-8 text-center">
-                  <MessageSquare size={48} className="mb-4" />
-                  <p className="text-xs font-bold uppercase tracking-widest">No Active Channels</p>
+
+         {!selectedId ? (
+            <div className="h-full flex flex-col items-center justify-center text-white/20 p-8 text-center relative z-10">
+               <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white/5 to-transparent border border-white/5 flex items-center justify-center mb-8 shadow-2xl animate-pulse-slow">
+                  <MessageSquare size={48} className="text-white/20" />
                </div>
-            ) : (
-               users.map((user) => (
-                  <button 
-                    key={user.visitor_id}
-                    onClick={() => onSelect(user.visitor_id)}
-                    className="w-full text-left p-4 rounded-2xl transition-all hover:bg-white/[0.05] border border-transparent hover:border-white/5 group relative overflow-hidden"
-                  >
-                     <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/0 to-purple-500/0 group-hover:to-purple-500/5 transition-all" />
-                     <div className="flex justify-between items-start mb-1.5 relative z-10">
-                        <span className="text-sm font-bold text-white/90 group-hover:text-white transition-colors">{user.name}</span>
-                        <span className="text-[10px] font-black text-white/20 uppercase tabular-nums">
-                           {user.lastTime ? new Date(user.lastTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
-                        </span>
-                     </div>
-                     <p className="text-xs text-white/30 truncate pr-6 group-hover:text-white/50 transition-colors relative z-10">{user.lastMessage}</p>
-                     <div className="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                        <ChevronRight size={14} className="text-purple-400" />
-                     </div>
-                  </button>
-               ))
-            )}
-         </div>
-      </div>
-    ) : (
-      <div className="flex-1 flex flex-col overflow-hidden relative bg-white/[0.01]">
-         <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-black/20">
-            {messages.map((msg, i) => (
-               <motion.div 
-                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                 key={msg.id || i} 
-                 className={`flex ${!msg.is_user ? 'justify-end' : 'justify-start'}`}
-               >
-                  <div className={`max-w-[85%] sm:max-w-[70%] px-5 py-3.5 rounded-[22px] text-sm shadow-2xl relative ${
-                    !msg.is_user 
-                      ? 'bg-purple-600 text-white rounded-br-none' 
-                      : 'bg-white/[0.05] text-white/90 rounded-bl-none border border-white/5 backdrop-blur-md'
-                  }`}>
-                     <p className="leading-relaxed">{msg.text}</p>
-                     <span className={`text-[8px] font-black uppercase tracking-tighter block mt-2 opacity-30 ${!msg.is_user ? 'text-white' : 'text-white/50'}`}>
-                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                     </span>
-                  </div>
-               </motion.div>
-            ))}
-            <div ref={chatRef} />
-         </div>
-         <form onSubmit={onSend} className="p-5 border-t border-white/5 bg-black/40 backdrop-blur-xl">
-            <div className="relative flex items-center gap-3">
-               <input 
-                 type="text" 
-                 value={reply}
-                 onChange={(e) => setReply(e.target.value)}
-                 placeholder="Transmit response..."
-                 className="w-full bg-black/40 border border-white/10 rounded-2xl pl-5 pr-14 py-4 text-sm text-white focus:border-purple-500/50 outline-none shadow-inner"
-               />
-               <button 
-                 type="submit"
-                 disabled={!reply.trim() || isReplying}
-                 className="absolute right-2 p-2.5 bg-purple-600 rounded-xl text-white hover:bg-purple-500 disabled:opacity-20 transition-all shadow-xl active:scale-95"
-               >
-                  {isReplying ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"/> : <Send size={18} />}
-               </button>
+               <h3 className="text-2xl font-display font-bold text-white/40 mb-2">Secure Uplink Standby</h3>
+               <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/20 max-w-xs">Select a neural channel to begin transmission.</p>
             </div>
-         </form>
-      </div>
-    )}
+         ) : (
+            <>
+               {/* Messages Area */}
+               <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar relative z-10">
+                  {messages.map((msg, i) => (
+                     <motion.div 
+                       initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                       animate={{ opacity: 1, y: 0, scale: 1 }}
+                       key={msg.id || i} 
+                       className={`flex ${!msg.is_user ? 'justify-end' : 'justify-start'}`}
+                     >
+                        <div className={`max-w-[85%] sm:max-w-[70%] px-6 py-4 rounded-[24px] text-sm shadow-xl relative backdrop-blur-md border ${
+                          !msg.is_user 
+                            ? 'bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-br-none border-purple-400/20 shadow-purple-900/20' 
+                            : 'bg-[#1a1025]/80 text-white/90 rounded-bl-none border-white/10 shadow-black/20'
+                        }`}>
+                           <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                           <div className={`flex items-center gap-1.5 mt-2 opacity-40 text-[9px] font-black uppercase tracking-widest ${!msg.is_user ? 'justify-end' : 'justify-start'}`}>
+                              {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {!msg.is_user && <Check size={10} />}
+                           </div>
+                        </div>
+                     </motion.div>
+                  ))}
+                  <div ref={chatRef} />
+               </div>
+
+               {/* Input Area */}
+               <div className="p-4 sm:p-6 border-t border-white/5 bg-[#0f0720]/80 backdrop-blur-xl relative z-20 flex flex-col gap-3">
+                  <form onSubmit={onSend} className="relative flex items-end gap-3 max-w-4xl mx-auto w-full">
+                     <div className="relative flex-1 group">
+                        <textarea 
+                          value={reply}
+                          onChange={(e) => setReply(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              onSend(e);
+                            }
+                          }}
+                          placeholder="Type secure message..."
+                          rows={1}
+                          className="w-full bg-[#1a1025] border border-white/10 rounded-2xl pl-5 pr-12 py-4 text-sm text-white focus:border-purple-500/50 focus:bg-[#1f1230] outline-none shadow-inner placeholder-white/20 transition-all resize-none custom-scrollbar min-h-[56px] max-h-[120px]"
+                        />
+                        <div className="absolute right-3 bottom-3">
+                           <button 
+                             type="submit"
+                             disabled={!reply.trim() || isReplying}
+                             className="p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl text-white hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] disabled:opacity-30 disabled:shadow-none transition-all shadow-lg active:scale-95 flex items-center justify-center"
+                           >
+                              {isReplying ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"/> : <Send size={16} />}
+                           </button>
+                        </div>
+                     </div>
+                  </form>
+
+                  <button 
+                    onClick={() => onSelect(null)}
+                    className="lg:hidden w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10 transition-all text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 group"
+                  >
+                    <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                    Back to Inbox
+                  </button>
+               </div>
+            </>
+         )}
+    </div>
   </div>
 );
 
@@ -535,44 +625,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     });
   };
 
-  const updatePricingFeature = (pkgIndex: number, featureIndex: number, field: string, value: string) => {
-    setTempContent(prev => {
-      const pricing = { ...prev.pricing };
-      const packages = [...(pricing.packages || [])];
-      if (!packages[pkgIndex]) return prev;
-      const features = [...(packages[pkgIndex].features || [])];
-      if (features[featureIndex]) {
-        features[featureIndex] = { ...features[featureIndex], [field]: value };
-      }
-      packages[pkgIndex] = { ...packages[pkgIndex], features };
-      return { ...prev, pricing: { ...pricing, packages } };
-    });
-  };
-
-  const addPricingFeature = (pkgIndex: number) => {
-    setTempContent(prev => {
-      const pricing = { ...prev.pricing };
-      const packages = [...(pricing.packages || [])];
-      if (!packages[pkgIndex]) return prev;
-      packages[pkgIndex] = {
-        ...packages[pkgIndex],
-        features: [...(packages[pkgIndex].features || []), { name: 'New Feature', description: 'Description' }]
-      };
-      return { ...prev, pricing: { ...pricing, packages } };
-    });
-  };
-
-  const removePricingFeature = (pkgIndex: number, featureIndex: number) => {
-    setTempContent(prev => {
-      const pricing = { ...prev.pricing };
-      const packages = [...(pricing.packages || [])];
-      if (!packages[pkgIndex]) return prev;
-      const features = (packages[pkgIndex].features || []).filter((_: any, i: number) => i !== featureIndex);
-      packages[pkgIndex] = { ...packages[pkgIndex], features };
-      return { ...prev, pricing: { ...pricing, packages } };
-    });
-  };
-
   const updateSocials = (section: keyof AppContent, memberIndex: number | null, platform: string, value: string) => {
     setTempContent(prev => {
       const sectionData = { ...prev[section] } as any;
@@ -633,7 +685,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
       
     if (!error) {
       setAdminReply("");
-      // No need to manually append to messages list, realtime subscription will handle it
       setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
     }
     setIsReplying(false);
@@ -648,35 +699,39 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
       <motion.div 
         initial={{ scale: 0.95, opacity: 0, y: 20 }} 
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        className="relative w-full h-[100dvh] sm:h-[90vh] sm:max-w-[1400px] bg-[#0A0510] sm:border sm:border-white/10 sm:rounded-[36px] flex flex-col overflow-hidden z-10 shadow-[0_0_120px_rgba(168,85,247,0.15)]"
+        className="relative w-full h-[100dvh] sm:h-[90vh] sm:max-w-[1400px] bg-[#0A0510] sm:border sm:border-white/10 sm:rounded-[36px] flex flex-col overflow-hidden z-10 shadow-[0_0_120px_rgba(168,85,247,0.2)]"
       >
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[120px] pointer-events-none -z-10" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-indigo-600/5 rounded-full blur-[150px] pointer-events-none -z-10" />
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-pulse-slow" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[150px] pointer-events-none -z-10 animate-pulse-slow" style={{ animationDelay: '2s' }} />
 
         {!isAuthenticated ? (
-          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center relative">
-             <div className="w-20 h-20 rounded-3xl bg-purple-600/10 border border-purple-500/20 flex items-center justify-center mb-8 shadow-2xl">
-                <Shield size={40} className="text-purple-400" />
+          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center relative z-20">
+             <div className="relative mb-8 group">
+                <div className="absolute inset-0 bg-purple-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+                <div className="w-24 h-24 rounded-3xl bg-[#0f0720] border border-white/10 flex items-center justify-center relative shadow-2xl">
+                    <Shield size={48} className="text-purple-400 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+                </div>
              </div>
-             <h2 className="text-3xl font-display font-bold text-white mb-2">Restricted Node</h2>
-             <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] mb-10">Neural Authentication Required</p>
+             <h2 className="text-4xl font-display font-bold text-white mb-2 tracking-tight">Restricted Node</h2>
+             <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em] mb-12">Neural Authentication Required</p>
              
              <form onSubmit={handleLogin} className="w-full max-w-sm space-y-5">
                <div className="relative group">
-                  <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-purple-400 transition-colors" />
+                  <div className="absolute inset-0 bg-purple-500/10 rounded-2xl blur-md opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
+                  <Lock size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-purple-400 transition-colors z-10" />
                   <input 
                     type="password" 
                     value={password} 
                     onChange={e => setPassword(e.target.value)} 
-                    placeholder="ENTER SECURITY KEY" 
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white text-center focus:border-purple-500/50 outline-none transition-all tracking-[0.5em] font-mono text-xs"
+                    placeholder="SECURITY KEY" 
+                    className="relative z-10 w-full bg-[#120b1d] border border-white/10 rounded-2xl pl-12 pr-4 py-5 text-white text-center focus:border-purple-500/50 outline-none transition-all tracking-[0.5em] font-mono text-xs placeholder-white/10 focus:shadow-[0_0_30px_rgba(168,85,247,0.1)]"
                     autoFocus
                   />
                </div>
-               <button className="w-full py-4 rounded-2xl bg-white text-black font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl hover:bg-purple-600 hover:text-white transition-all">
+               <button className="w-full py-5 rounded-2xl bg-white text-black font-black uppercase tracking-[0.3em] text-[10px] shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:bg-purple-600 hover:text-white hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] transition-all duration-300">
                   Initialize Link
                </button>
-               <button type="button" onClick={onClose} className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mt-6 hover:text-white/40 transition-colors">Abort Access</button>
+               <button type="button" onClick={onClose} className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mt-6 hover:text-white/50 transition-colors">Abort Access</button>
              </form>
           </div>
         ) : (
@@ -696,17 +751,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     animate={{ x: 0 }}
                     exit={{ x: -280 }}
                     transition={{ type: "spring", stiffness: 400, damping: 40 }}
-                    className="absolute lg:relative w-[300px] h-full border-r border-white/5 flex flex-col bg-[#0A0510] lg:bg-transparent z-[110] backdrop-blur-3xl lg:backdrop-blur-none"
+                    className="absolute lg:relative w-[300px] h-full border-r border-white/5 flex flex-col bg-[#0A0510]/95 lg:bg-transparent z-[110] backdrop-blur-3xl lg:backdrop-blur-none"
                   >
                     <div className="p-10 flex items-center gap-4">
-                       <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/10 shadow-lg bg-black">
-                          <img src="https://image2url.com/r2/default/images/1770543518698-44cdd9b3-f860-41c0-98cc-36ec0e607a27.jpeg" className="w-full h-full object-cover" />
+                       <div className="w-12 h-12 rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(168,85,247,0.2)] bg-black relative group">
+                          <img src="https://image2url.com/r2/default/images/1770543518698-44cdd9b3-f860-41c0-98cc-36ec0e607a27.jpeg" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                        </div>
                        <div>
                           <h3 className="font-display font-bold text-white text-base tracking-widest uppercase">Xevon Core</h3>
-                          <div className="flex items-center gap-1.5">
-                             <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-                             <span className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">Master Link</span>
+                          <div className="flex items-center gap-2 mt-1">
+                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
+                             <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Online</span>
                           </div>
                        </div>
                     </div>
@@ -715,29 +770,30 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                       {MENU_ITEMS.map((item, i) => {
                         if (item.type === 'divider') {
                           return (
-                            <div key={i} className="px-5 pt-10 pb-3 text-[9px] text-white/20 uppercase font-black tracking-[0.3em]">{item.label}</div>
+                            <div key={i} className="px-5 pt-8 pb-3 text-[9px] text-white/20 uppercase font-black tracking-[0.3em] border-t border-white/5 mt-4">{item.label}</div>
                           );
                         }
                         const Icon = item.icon;
-                        const SafeIcon = Icon ? <Icon size={18} className={activeTab === item.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100 transition-opacity'} /> : null;
+                        const SafeIcon = Icon ? <Icon size={18} className={`transition-colors duration-300 ${activeTab === item.id ? 'text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]' : 'text-white/40 group-hover:text-white'}`} /> : null;
 
                         return (
                           <button 
                             key={item.id} 
                             onClick={() => {
                               setActiveTab(item.id!);
+                              if (item.id === 'support') setSelectedVisitorId(null);
                               if (window.innerWidth < 1024) setIsSidebarOpen(false);
                             }} 
-                            className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all relative group overflow-hidden ${
+                            className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all relative group overflow-hidden duration-300 ${
                               activeTab === item.id 
-                                ? 'bg-purple-600 text-white shadow-[0_10px_30px_rgba(168,85,247,0.3)]' 
-                                : 'text-white/30 hover:bg-white/[0.04] hover:text-white'
+                                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-[0_8px_25px_rgba(168,85,247,0.25)]' 
+                                : 'text-white/40 hover:bg-white/[0.04] hover:text-white'
                             }`}
                           >
                             {SafeIcon}
                             <span className="text-[10px] font-black uppercase tracking-[0.2em]">{item.label}</span>
                             {activeTab === item.id && (
-                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-white rounded-full" />
+                              <motion.div layoutId="activeTab" className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-r-full shadow-[0_0_10px_white]" />
                             )}
                           </button>
                         );
@@ -745,7 +801,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="p-8 border-t border-white/5">
-                      <button onClick={onClose} className="w-full flex items-center gap-4 px-5 py-4 text-white/30 hover:text-red-400 hover:bg-red-400/5 rounded-2xl transition-all group">
+                      <button onClick={onClose} className="w-full flex items-center gap-4 px-5 py-4 text-white/30 hover:text-red-400 hover:bg-red-500/10 rounded-2xl transition-all group">
                         <LogOut size={18} className="opacity-40 group-hover:opacity-100 transition-opacity" />
                         <span className="text-[10px] font-black uppercase tracking-[0.2em]">Disconnect</span>
                       </button>
@@ -755,9 +811,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
               )}
             </AnimatePresence>
 
-            <div className="flex-1 flex flex-col min-w-0 bg-black/30 overflow-hidden relative">
+            <div className="flex-1 flex flex-col min-w-0 bg-[#0A0510]/50 overflow-hidden relative">
               {/* Context-Aware Header Navigation */}
-              <div className="h-20 sm:h-24 border-b border-white/5 flex items-center justify-between px-6 sm:px-10 shrink-0 bg-black/20 backdrop-blur-xl z-20">
+              <div className="h-24 border-b border-white/5 flex items-center justify-between px-6 sm:px-10 shrink-0 bg-[#0A0510]/40 backdrop-blur-xl z-20">
                 <div className="flex items-center gap-4">
                   <button 
                     onClick={() => {
@@ -767,40 +823,35 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                         setIsSidebarOpen(true);
                       }
                     }}
-                    className={`flex lg:hidden items-center gap-2 p-2 -ml-2 text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-all ${
-                      (activeTab === 'support' && selectedVisitorId) ? '!flex' : ''
-                    }`}
+                    className="flex items-center gap-2 p-3 -ml-2 text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-all lg:hidden"
                   >
                     {(activeTab === 'support' && selectedVisitorId) ? (
                       <ArrowLeft size={22} />
                     ) : (
                       <Menu size={22} />
                     )}
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] hidden sm:inline">
-                      {(activeTab === 'support' && selectedVisitorId) ? "Back" : "Menu"}
-                    </span>
                   </button>
                   <div className="flex flex-col">
-                    <h2 className="text-xl sm:text-2xl font-display font-bold text-white uppercase tracking-widest truncate max-w-[180px] sm:max-w-none">
+                    <h2 className="text-xl sm:text-3xl font-display font-bold text-white uppercase tracking-widest truncate max-w-[200px] sm:max-w-none drop-shadow-lg">
                       {activeTab === 'support' && selectedVisitorId 
                         ? (chatUsers.find(u => u.visitor_id === selectedVisitorId)?.name || "Neural Comms")
                         : (MENU_ITEMS.find(m => m.id === activeTab)?.label || activeTab)}
                     </h2>
                     {activeTab === 'support' && selectedVisitorId && (
-                      <span className="text-[8px] font-black text-purple-400 uppercase tracking-widest leading-none mt-0.5 animate-pulse">Live Link Established</span>
+                      <span className="text-[9px] font-black text-purple-400 uppercase tracking-widest leading-none mt-1 animate-pulse">Live Link Established</span>
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   {['orders', 'support', 'notifications'].indexOf(activeTab) === -1 && (
                     <button 
                       onClick={handleSave} 
                       disabled={isLoading} 
-                      className="px-6 sm:px-8 py-3.5 rounded-2xl bg-white text-black font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl hover:bg-purple-600 hover:text-white transition-all disabled:opacity-50 flex items-center gap-3 relative overflow-hidden group"
+                      className="px-6 sm:px-8 py-3.5 rounded-2xl bg-white text-black font-black uppercase tracking-[0.2em] text-[10px] shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:bg-purple-600 hover:text-white hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] transition-all disabled:opacity-50 flex items-center gap-3 relative overflow-hidden group duration-300"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-shimmer" />
                       {isLoading ? (
-                        <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                       ) : (
                         <Save size={16} />
                       )}
@@ -808,16 +859,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                       <span className="sm:hidden">Sync</span>
                     </button>
                   )}
-                  <button onClick={onClose} className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-white/20 hover:text-white bg-white/5 rounded-2xl transition-all"><X size={20} /></button>
+                  <button onClick={onClose} className="w-12 h-12 flex items-center justify-center text-white/30 hover:text-white bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-transparent hover:border-white/10"><X size={20} /></button>
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 sm:p-10 custom-scrollbar relative z-10">
-                <div className="max-w-5xl mx-auto pb-10 h-full flex flex-col">
+                <div className="max-w-6xl mx-auto pb-10 h-full flex flex-col">
                   {activeTab === 'orders' && <OrdersView orders={orders} team={tempContent.team.members || []} onAssign={assignRepresentative} />}
                   
                   {activeTab === 'support' && (
-                    <div className="flex-1 min-h-[500px]">
+                    <div className="flex-1 h-full min-h-0">
                       <SupportChat 
                         users={chatUsers} 
                         selectedId={selectedVisitorId} 
@@ -828,6 +879,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                         onSend={handleAdminSend} 
                         isReplying={isReplying}
                         chatRef={chatEndRef}
+                        onBack={() => setIsSidebarOpen(true)}
                       />
                     </div>
                   )}
@@ -837,12 +889,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                       <SectionBlock title="Alert Management">
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-4">
                           <div className="flex-1">
-                             <h4 className="text-white font-bold mb-1">FCM Push Protocol</h4>
-                             <p className="text-white/30 text-xs leading-relaxed max-w-md">Initialize a secure connection to receive real-time neural alerts for orders and comms directly on this node.</p>
+                             <h4 className="text-white font-bold mb-2 text-lg">FCM Push Protocol</h4>
+                             <p className="text-white/40 text-sm leading-relaxed max-w-lg">Initialize a secure connection to receive real-time neural alerts for orders and comms directly on this node. Ensure notifications are allowed in browser settings.</p>
                           </div>
                           <div className="flex gap-4 w-full sm:w-auto">
-                            <button onClick={handleTestNotification} disabled={isSendingTest} className="flex-1 sm:flex-none px-6 py-3 rounded-2xl bg-white/5 text-white/50 text-[10px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/10 hover:text-white transition-all">Test Uplink</button>
-                            <button onClick={handleEnableNotifications} disabled={isSubscribing} className="flex-1 sm:flex-none px-8 py-3 rounded-2xl bg-purple-600 text-white text-[10px] font-black uppercase tracking-widest shadow-xl shadow-purple-600/20 active:scale-95 transition-all">Connect Device</button>
+                            <button onClick={handleTestNotification} disabled={isSendingTest} className="flex-1 sm:flex-none px-6 py-4 rounded-2xl bg-white/5 text-white/50 text-[10px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/10 hover:text-white transition-all disabled:opacity-50">Test Uplink</button>
+                            <button onClick={handleEnableNotifications} disabled={isSubscribing} className="flex-1 sm:flex-none px-8 py-4 rounded-2xl bg-purple-600 text-white text-[10px] font-black uppercase tracking-widest shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:shadow-[0_0_50px_rgba(168,85,247,0.5)] active:scale-95 transition-all disabled:opacity-50">Connect Device</button>
                           </div>
                         </div>
                       </SectionBlock>
@@ -886,15 +938,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
                       <div className="flex justify-between items-center bg-white/[0.03] p-6 rounded-[28px] border border-white/10 backdrop-blur-md shadow-lg">
                         <div>
-                           <h3 className="text-lg font-display font-bold text-white">Service Matrix</h3>
+                           <h3 className="text-xl font-display font-bold text-white">Service Matrix</h3>
                            <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mt-1">Core Operational Capacities</p>
                         </div>
-                        <button onClick={() => addItemToArray('services', 'items', { title: 'NEW CAPABILITY', description: 'Enter capacity description...' })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-xl shadow-purple-600/20 active:scale-95 transition-all"><Plus size={16} /> Add Module</button>
+                        <button onClick={() => addItemToArray('services', 'items', { title: 'NEW CAPABILITY', description: 'Enter capacity description...' })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] active:scale-95 transition-all"><Plus size={16} /> Add Module</button>
                       </div>
                       <div className="grid grid-cols-1 gap-6">
                         {(tempContent.services.items || []).map((s, i) => (
                           <SectionBlock key={i} title={`Capability Cluster #${i + 1}`}>
-                            <div className="flex justify-end mb-4"><button onClick={() => removeItemFromArray('services', 'items', i)} className="p-2 text-white/10 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
+                            <div className="flex justify-end mb-4"><button onClick={() => removeItemFromArray('services', 'items', i)} className="p-2.5 text-white/20 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
                             <div className="space-y-6">
                                <InputField label="Cluster Name" value={s.title} onChange={v => updateItemInArray('services', 'items', i, 'title', v)} />
                                <TextArea label="Operational Description" value={s.description} onChange={v => updateItemInArray('services', 'items', i, 'description', v)} />
@@ -909,15 +961,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
                       <div className="flex justify-between items-center bg-white/[0.03] p-6 rounded-[28px] border border-white/10 backdrop-blur-md shadow-lg">
                         <div>
-                           <h3 className="text-lg font-display font-bold text-white">Visual Archive</h3>
+                           <h3 className="text-xl font-display font-bold text-white">Visual Archive</h3>
                            <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mt-1">Proof of Innovation</p>
                         </div>
-                        <button onClick={() => addItemToArray('portfolio', 'items', { id: Date.now(), title: 'NEW ARCHIVE', category: 'CATEGORY', image: '' })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-xl shadow-purple-600/20 active:scale-95 transition-all"><Plus size={16} /> New Asset</button>
+                        <button onClick={() => addItemToArray('portfolio', 'items', { id: Date.now(), title: 'NEW ARCHIVE', category: 'CATEGORY', image: '' })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] active:scale-95 transition-all"><Plus size={16} /> New Asset</button>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {(tempContent.portfolio.items || []).map((p, i) => (
                           <SectionBlock key={i} title={`Archive Node #${i + 1}`}>
-                            <div className="flex justify-end mb-4"><button onClick={() => removeItemFromArray('portfolio', 'items', i)} className="p-2 text-white/10 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
+                            <div className="flex justify-end mb-4"><button onClick={() => removeItemFromArray('portfolio', 'items', i)} className="p-2.5 text-white/20 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
                             <ImageUploadField label="Archive Preview" value={p.image} onChange={v => updateItemInArray('portfolio', 'items', i, 'image', v)} />
                             <div className="grid grid-cols-1 gap-6 mt-6">
                               <InputField label="Asset Identifier" value={p.title} onChange={v => updateItemInArray('portfolio', 'items', i, 'title', v)} />
@@ -933,15 +985,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
                       <div className="flex justify-between items-center bg-white/[0.03] p-6 rounded-[28px] border border-white/10 backdrop-blur-md shadow-lg">
                         <div>
-                           <h3 className="text-lg font-display font-bold text-white">Neural Units</h3>
+                           <h3 className="text-xl font-display font-bold text-white">Neural Units</h3>
                            <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mt-1">Human Intelligence Assets</p>
                         </div>
-                        <button onClick={() => addItemToArray('team', 'members', { name: 'NEW AGENT', role: 'SPECIALIST', image: '', socials: {} })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-xl shadow-purple-600/20 active:scale-95 transition-all"><Plus size={16} /> Deploy Agent</button>
+                        <button onClick={() => addItemToArray('team', 'members', { name: 'NEW AGENT', role: 'SPECIALIST', image: '', socials: {} })} className="px-6 py-3 bg-purple-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] active:scale-95 transition-all"><Plus size={16} /> Deploy Agent</button>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {(tempContent.team.members || []).map((m, i) => (
                           <SectionBlock key={i} title={m.name}>
-                            <div className="flex justify-end mb-4"><button onClick={() => removeItemFromArray('team', 'members', i)} className="p-2 text-white/10 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
+                            <div className="flex justify-end mb-4"><button onClick={() => removeItemFromArray('team', 'members', i)} className="p-2.5 text-white/20 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"><Trash2 size={18}/></button></div>
                             <ImageUploadField label="Asset Profile Image" value={m.image} onChange={v => updateItemInArray('team', 'members', i, 'image', v)} />
                             <div className="grid grid-cols-1 gap-6 mt-8">
                               <InputField label="Agent Identity" value={m.name} onChange={v => updateItemInArray('team', 'members', i, 'name', v)} />

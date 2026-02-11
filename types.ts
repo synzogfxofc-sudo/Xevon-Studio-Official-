@@ -74,4 +74,5 @@ export interface ChatMessage {
   text: string;
   is_user: boolean;
   created_at: string;
+  status?: 'sent' | 'delivered' | 'seen';
 }

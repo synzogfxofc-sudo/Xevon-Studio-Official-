@@ -16,7 +16,7 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center pt-32 md:pt-40 pb-20 overflow-hidden transform-gpu">
+    <section id="hero" className="relative min-h-screen flex items-center pt-32 md:pt-40 pb-20 overflow-hidden transform-gpu">
       {/* Background Elements - Optimized for Mobile */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-purple-600/20 rounded-full blur-[60px] sm:blur-[120px] animate-float" />

@@ -19,6 +19,14 @@ export const Footer: React.FC<FooterProps> = () => {
   const { content } = useContent();
   const { company } = content;
 
+  const scrollToSection = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="relative border-t border-white/10 bg-black/40 backdrop-blur-xl pt-20 pb-10 overflow-hidden">
       {/* Glow effects */}
@@ -60,11 +68,23 @@ export const Footer: React.FC<FooterProps> = () => {
           </div>
           
           <div>
-            <h4 className="font-bold text-white mb-6">Services</h4>
+            <h4 className="font-bold text-white mb-6">Explore</h4>
             <ul className="space-y-4">
-              {['Web Development', 'UI/UX Design', 'Branding', 'Digital Marketing', 'Mobile Apps'].map(item => (
-                <li key={item}>
-                  <a href="#" className="text-white/50 hover:text-purple-400 transition-colors">{item}</a>
+              {[
+                { name: 'Services', id: 'services' },
+                { name: 'Portfolio', id: 'portfolio' },
+                { name: 'Pricing', id: 'pricing' },
+                { name: 'Team', id: 'team' },
+                { name: 'Reviews', id: 'community-reviews' }
+              ].map(item => (
+                <li key={item.name}>
+                  <a 
+                    href={`#${item.id}`} 
+                    onClick={(e) => scrollToSection(e, item.id)}
+                    className="text-white/50 hover:text-purple-400 transition-colors"
+                  >
+                    {item.name}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -73,9 +93,19 @@ export const Footer: React.FC<FooterProps> = () => {
           <div>
             <h4 className="font-bold text-white mb-6">Company</h4>
             <ul className="space-y-4">
-              {['About Us', 'Careers', 'Blog', 'Contact', 'Privacy Policy'].map(item => (
-                <li key={item}>
-                  <a href="#" className="text-white/50 hover:text-purple-400 transition-colors">{item}</a>
+              {[
+                { name: 'About Us', id: 'hero' },
+                { name: 'Analytics', id: 'analytics' },
+                { name: 'Contact', id: 'contact' },
+              ].map(item => (
+                <li key={item.name}>
+                  <a 
+                    href={`#${item.id}`} 
+                    onClick={(e) => scrollToSection(e, item.id)}
+                    className="text-white/50 hover:text-purple-400 transition-colors"
+                  >
+                    {item.name}
+                  </a>
                 </li>
               ))}
             </ul>

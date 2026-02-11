@@ -11,17 +11,35 @@ interface NavbarProps {
   toggleTheme: () => void;
 }
 
+const NAV_ITEMS = [
+  { label: 'Home', id: 'hero' },
+  { label: 'Services', id: 'services' },
+  { label: 'Portfolio', id: 'portfolio' },
+  { label: 'Pricing', id: 'pricing' },
+  { label: 'Team', id: 'team' },
+  { label: 'Contact', id: 'contact' },
+];
+
 export const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleTheme }) => {
   const { currentOrder, userOrders, toggleStatusModal } = useOrder();
   const { activeNotification } = useNotification();
   const { content } = useContent();
   const [time, setTime] = useState(new Date());
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Clock Update
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const scrollToSection = (id: string) => {
+    setIsMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const hoursRaw = time.getHours();
   const hours12 = hoursRaw % 12 || 12;
@@ -51,7 +69,10 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleTheme }) => {
         <div className={`relative flex items-center justify-between w-full h-14 sm:h-16 bg-[#030005]/95 backdrop-blur-[45px] rounded-[22.5px] px-4 sm:px-6 border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.85)]`}>
           
           {/* Logo Section */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div 
+            className="flex items-center gap-3 shrink-0 cursor-pointer" 
+            onClick={() => scrollToSection('hero')}
+          >
             <motion.div 
               whileHover={{ rotate: -5, scale: 1.05 }}
               className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-white/20 shadow-lg flex-shrink-0 ring-1 ring-white/10"
@@ -152,15 +173,60 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleTheme }) => {
                  </div>
               </div>
 
-              {/* Menu Trigger (Visual Only here) */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                className="hidden sm:flex group flex-col gap-[3px] p-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] transition-all"
-              >
-                <div className="w-4 h-[1.5px] bg-white/60 rounded-full group-hover:w-5 transition-all duration-300" />
-                <div className="w-5 h-[1.5px] bg-purple-500/80 rounded-full group-hover:w-3 transition-all duration-300" />
-                <div className="w-3 h-[1.5px] bg-white/60 rounded-full group-hover:w-5 transition-all duration-300" />
-              </motion.button>
+              {/* Menu Trigger */}
+              <div className="relative">
+                <motion.button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  whileHover={{ scale: 1.05 }}
+                  className="flex group flex-col gap-[3px] p-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] transition-all"
+                >
+                  <motion.div 
+                    animate={isMenuOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
+                    className="w-4 h-[1.5px] bg-white/60 rounded-full group-hover:w-5 transition-all duration-300" 
+                  />
+                  <motion.div 
+                    animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+                    className="w-5 h-[1.5px] bg-purple-500/80 rounded-full group-hover:w-3 transition-all duration-300" 
+                  />
+                  <motion.div 
+                    animate={isMenuOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }}
+                    className="w-3 h-[1.5px] bg-white/60 rounded-full group-hover:w-5 transition-all duration-300" 
+                  />
+                </motion.button>
+
+                <AnimatePresence>
+                  {isMenuOpen && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm sm:hidden"
+                        onClick={() => setIsMenuOpen(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute right-0 top-full mt-4 w-56 p-2 rounded-2xl bg-[#0f0720]/90 backdrop-blur-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col gap-1 z-50 overflow-hidden"
+                      >
+                         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none" />
+                         
+                         {NAV_ITEMS.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => scrollToSection(item.id)}
+                            className="relative text-left px-5 py-3 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all group overflow-hidden"
+                          >
+                             <span className="relative z-10">{item.label}</span>
+                             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </button>
+                         ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>
