@@ -76,3 +76,11 @@ export interface ChatMessage {
   created_at: string;
   status?: 'sent' | 'delivered' | 'seen';
 }
+
+export interface ChatUser {
+  visitor_id: string;
+  name: string;
+  lastMessage: string;
+  lastTime: string;
+  unreadCount?: number;
+}
