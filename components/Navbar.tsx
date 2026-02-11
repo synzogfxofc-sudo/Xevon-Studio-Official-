@@ -64,10 +64,19 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleTheme }) => {
               <div className="absolute inset-0 bg-purple-500/10 mix-blend-overlay"></div>
             </motion.div>
             
-            <div className="flex flex-col hidden xs:flex">
-              <span className="font-display font-black text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-white animate-shine bg-[length:200%_100%]">
-                {content.company.name}
-              </span>
+            <div className="flex flex-col">
+              <div className="relative">
+                {/* Glow layer for bloom effect */}
+                <span className="absolute inset-0 font-display font-black text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-purple-500/30 blur-[4px]" aria-hidden="true">
+                  {content.company.name}
+                </span>
+                
+                {/* Main text with premium liquid metal animation (Double Glint) */}
+                <span className="relative font-display font-black text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-transparent bg-clip-text bg-[linear-gradient(to_right,#ffffff_0%,#ffffff_35%,#d8b4fe_45%,#ffffff_50%,#d8b4fe_55%,#ffffff_65%,#ffffff_100%)] bg-[length:250%_auto] animate-shine">
+                  {content.company.name}
+                </span>
+              </div>
+
               <div className="flex items-center gap-1.5 mt-0.5">
                  <div className="relative flex items-center justify-center w-1.5 h-1.5">
                     <div className="absolute w-full h-full bg-emerald-500 rounded-full animate-ping opacity-75"></div>
