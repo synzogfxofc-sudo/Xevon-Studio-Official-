@@ -142,11 +142,12 @@ function App() {
             <PurchaseModal />
             <OrderStatus />
 
-            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden transform-gpu">
                {darkMode ? (
                  <>
-                   <div className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-purple-900/20 rounded-full blur-[120px] animate-pulse-slow"></div>
-                   <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-900/10 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+                   {/* Optimized blobs: Smaller and less blur on mobile to fix Android lag */}
+                   <div className="absolute top-[-10%] left-[-10%] w-[80vw] sm:w-[70vw] h-[80vw] sm:h-[70vw] bg-purple-900/20 rounded-full blur-[50px] sm:blur-[120px] animate-pulse-slow"></div>
+                   <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-900/10 rounded-full blur-[40px] sm:blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
                  </>
                ) : (
                  <>
