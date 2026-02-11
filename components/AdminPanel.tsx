@@ -998,6 +998,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                             <div className="grid grid-cols-1 gap-6 mt-8">
                               <InputField label="Agent Identity" value={m.name} onChange={v => updateItemInArray('team', 'members', i, 'name', v)} />
                               <InputField label="Operational Role" value={m.role} onChange={v => updateItemInArray('team', 'members', i, 'role', v)} />
+                              <InputField label="Direct Uplink (WhatsApp)" value={m.whatsapp || ''} onChange={v => updateItemInArray('team', 'members', i, 'whatsapp', v)} icon={MessageSquare} />
+                              <TextArea label="Professional Bio" value={m.bio || ''} onChange={v => updateItemInArray('team', 'members', i, 'bio', v)} />
                             </div>
                             <div className="mt-10 border-t border-white/5 pt-10">
                               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-5 block">Social Link Convergences</label>
